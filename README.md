@@ -1,115 +1,125 @@
-<h1 align="center">Process Governance for Claude Code</h1>
+# Process Governance for Claude Code
 
-<p align="center">
-  <strong>The open-source process governance system that is just a database and Claude Code.</strong>
-</p>
+Your procedures, owners, revisions and review dates in a database you own. Built by Enterprise DNA. Works with Claude Code, Codex, OpenCode or Cursor.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free MIT code. Install it and own the records. | Your fields, rules, Nintex data mapping and a web front end or different stack if required. | Installed, connected and operated through Omni by Enterprise DNA. One setup fee, then a monthly retainer. |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Nintex Process Manager data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=nintex-process-manager">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/nintex-process-manager?utm_source=github&utm_medium=readme&utm_campaign=nintex-process-manager">How it works</a></td>
-  </tr>
-</table>
+[Discuss your version with Sam](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=nintex-process-manager).
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-nintex-process-manager">Instead of Nintex Process Manager</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+## What it covers
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
+For an operations lead maintaining controlled procedures across purchasing, administration and site operations. Keep approved procedures separate from proposed changes, record owner reviews, follow up improvements and track acknowledgements against the current approved revision. Generate procedure sheets, change records and owner review briefs. No workflow engine or graphical process editor is required for these jobs.
 
----
-
-## What is this
-
-Process Governance for Claude Code does the job you pay Nintex Process Manager for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Nintex Process Manager dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Nintex Process Manager per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=nintex-process-manager).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+Nintex's [current pricing route](https://www.nintex.com/pricing/) asks you to contact sales. We have not verified a current NZ or AU customer invoice and make no savings claim. The procurement benchmarks and candidate assessment are in [research notes](docs/research.md).
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or later.
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/process-governance-for-claude-code.git
 cd process-governance-for-claude-code
 npm install
 npm run demo
+npm run processes -- weekly-review
+npm run view
+npm run docs
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
-
-### Use it with your own Postgres or Supabase
-
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+Open the folder with your coding agent and ask /weekly-review. With DATABASE_URL unset, PGlite stores the demo in .data/db. For your own Postgres, set DATABASE_URL and run npm run migrate. Run npm run demo only against a demo database. Agent use and hosting have their own costs. Back up your database and referenced evidence separately.
 
 ## The commands
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+28 CLI commands, plus /customise and /new-view, make 30 command recipes. Reads print aligned output; --json returns structured records. Writes require --actor=. Resolve records by reference, UUID prefix or case-insensitive name. Ambiguous names list candidates and exit 1.
 
-| Command | What it does |
+| Recurring job | Command |
 |---|---|
-| `/...` | ... |
+| Show command names and accepted options | /help |
+| Read the process register | /processes |
+| Read one process and its revisions, reviews and improvements | /process |
+| Find owner reviews due within thirty days | /reviews-due |
+| Read proposed revisions awaiting approval | /approval-queue |
+| Review open improvement actions in due-date order | /improvements-due |
+| Find assigned readers missing the current approved version | /acknowledgement-gaps |
+| Compare owners, review dates and overdue improvement counts | /owner-workload |
+| Compare recorded active and waiting minutes with high-priority actions | /bottlenecks |
+| Find overdue, unowned, quiet or changing processes | /attention |
+| Check record exceptions against cited rules and local policies | /compliance |
+| Read the activity history | /history |
+| Build the Monday review from review dates, improvements and acknowledgements | /weekly-review |
+| Register a process as a draft | /add |
+| Update ownership, scope or retention metadata with a reason | /set-metadata |
+| Propose the next procedure version | /revise |
+| Correct proposed content before approval | /edit-draft |
+| Record independent approval with evidence and a future review date | /approve |
+| Record an owner review of the approved version | /review |
+| Assign an improvement with an owner and due date | /log-improvement |
+| Record a resolution and its evidence | /close-improvement |
+| Add someone who must acknowledge a procedure | /assign-reader |
+| Record evidence that an assigned reader acknowledged the current version | /acknowledge |
+| Record a process note | /log |
+| Retire a process after holds, open improvements and drafts are resolved | /archive |
+| Bring across a Nintex Process List CSV as draft register records | /import |
+| Export all seven record sets to a new JSON file | /export |
+| Write an internal weekly brief to drafts without sending | /draft-review |
+| Add a field or rule | /customise |
+| Add a report | /new-view |
 
-## Instead of nintex-process-manager
+## Ten questions to ask your own records
 
-<!-- TODO(author): how to bring data across from Nintex Process Manager; link docs/replace-nintex-process-manager.md -->
+These combined checks run today. They are examples of tailoring questions to your business, not a claim that Nintex cannot produce similar reports.
 
-## Architecture
+- Which overdue process reviews also have overdue improvement actions? `reviews-due`
+- Which pending safety procedure changes still need a control review? `compliance`
+- Who has acknowledged an old version but not the current one? `acknowledgement-gaps`
+- Which processes combine the most waiting time with high-priority open actions? `bottlenecks`
+- Which owners carry the largest overdue process review load? `owner-workload`
+- Which procedures have proposed changes while an older version remains approved? `approval-queue`
+- Which process records have gone quiet for thirty days? `attention`
+- Which personal-information processes need their retention purpose reviewed? `compliance`
+- Which imported records still need procedure content and approval? `compliance`
+- What are the review dates, open improvements and missing read receipts for Monday? `weekly-review`
 
+## Your first hour: ten things to ask for
+
+1. Put our name, logo and colours on procedure sheets.
+2. Show overdue reviews beside unresolved improvements.
+3. Show the approved version and the proposed version separately.
+4. Find readers who have not acknowledged the current version.
+5. List pending changes to safety procedures.
+6. Compare recorded waiting time across purchasing procedures.
+7. Test our Nintex export without saving changes.
+8. Draft our Monday review from the actual records.
+9. Add a business-unit field with a migration.
+10. Add a read-only report for our process owners.
+
+## A controlled change
+
+Write the proposed steps as a JSON array. Each step needs title, role, active_minutes and wait_minutes. Use examples/steps.json as the shape. Propose with revise; correct an unapproved version with edit-draft. A separate reviewer records approval evidence and a future review date. A safety-sensitive procedure also requires a control-review reference. Approved content is immutable. The older approved revision stays current until its replacement is approved. Readers then appear as missing acknowledgements until evidence for the new version is recorded.
+
+Review records preserve the revision checked. set-metadata changes owners, grouping, jurisdiction or retention metadata with a reason. archive refuses legal holds, open improvements and draft revisions. It does not delete records.
+
+## Switch from Nintex Process Manager
+
+```bash
+npm run processes -- import nintex --file=examples/nintex-process-list.csv --dry-run --actor="Migration operator"
+npm run processes -- import nintex --file=examples/nintex-process-list.csv --actor="Migration operator"
 ```
-process-governance-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
 
-## Built for coding agents
+The importer covers the Process List CSV register, preserves all original fields and starts records as drafts. Use --map=examples/import-map.json for heading differences. The sample demonstrates supported headings, not a certified export from a live tenant. Procedure steps, approvals, permissions and attachments require separate mapping and reconciliation. [Full replacement guide](docs/replace-nintex-process-manager.md).
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Documents and views
 
-## Contributing
+brand.json controls business name, logo reference and colours. npm run docs produces controlled procedure snapshots, review briefs and change records in docs-out/. npm run view produces the week and control checks in views/. These are read-only HTML snapshots, printable to PDF. They never send messages or change operational records. [Why no front end](docs/why-no-front-end.md).
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+## Compliance and trust
 
-## Want it installed and run for you?
+[Compliance notes](docs/compliance.md) cite NZ control-review guidance, NZ Privacy Principle 9 and Australian APP 11. The checks flag records for assessment. They do not certify a safe process or decide a legal retention period. Actor names and evidence references are supplied by the operator. An acknowledgement is not proof of training or competence. History is not tamper-proof against database administrators.
 
-Enterprise DNA installs Process Governance for Claude Code for your business, migrates your Nintex Process Manager data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+## Tests
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=nintex-process-manager)
-- Read more: [enterprisedna.co/omni/instead-of/nintex-process-manager](https://enterprisedna.co/omni/instead-of/nintex-process-manager?utm_source=github&utm_medium=readme&utm_campaign=nintex-process-manager)
+npm test uses a temporary database. It covers all 28 CLI commands, repeated migrations and seeds, rejected self-approval, immutable approved revisions, acknowledgement invalidation, safety evidence, legal holds, atomic import rollback, dry runs, repeat detection, exports and escaped HTML. GitHub checks run the suite on Linux, Windows and PostgreSQL 16.
 
-## License
-
-MIT. Copyright (c) 2026 Enterprise DNA.
+MIT licence. Not affiliated with Nintex or Anthropic. [Book 30 minutes with Sam](https://enterprisedna.co/omni/book/?offer=replace-software&utm_campaign=nintex-process-manager&utm_source=github&utm_medium=readme).

@@ -1,0 +1,7 @@
+{
+  "id": "Process ID",
+  "name": "Process Name",
+  "group": "Process Group",
+  "owner": "Process Owner",
+  "expert": "Process Expert"
+}

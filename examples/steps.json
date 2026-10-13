@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Check the requested record against approved evidence",
+    "role": "Process owner",
+    "active_minutes": 15,
+    "wait_minutes": 30
+  },
+  {
+    "title": "Record the review outcome",
+    "role": "Reviewer",
+    "active_minutes": 5,
+    "wait_minutes": 0
+  }
+]

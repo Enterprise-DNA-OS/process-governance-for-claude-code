@@ -1,11 +1,59 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "procedure",
+    "title": "Controlled procedure snapshot",
+    "for_each": "select p.id,p.reference as name from processes p join current_procedures c on c.process_id=p.id where p.status='active'",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Control record",
+        "sql": "select p.reference,p.name,p.owner,p.review_due,c.version,c.objective,c.approver,c.approved_at,c.evidence_ref,c.safety_review_ref from processes p join current_procedures c on c.process_id=p.id where p.id=$1",
+        "note": "Internal snapshot. Verify the current version before use. Evidence references are operator supplied."
+      },
+      {
+        "title": "Procedure steps",
+        "sql": "select s.ordinality as step,s.value->>'title' as instruction,s.value->>'role' as responsible_role,s.value->>'active_minutes' as active_minutes,s.value->>'wait_minutes' as wait_minutes from current_procedures c cross join lateral jsonb_array_elements(c.steps) with ordinality s(value,ordinality) where c.process_id=$1 order by s.ordinality"
+      }
+    ]
+  },
+  {
+    "name": "review-brief",
+    "title": "Process owner review brief",
+    "for_each": "select id,reference as name from processes where status<>'archived'",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Register",
+        "sql": "select reference,name,owner,review_due,approved_version,pending_version from process_register where id=$1"
+      },
+      {
+        "title": "Improvement actions",
+        "sql": "select reference,title,owner,due,priority from improvement_queue where process=(select reference from processes where id=$1)"
+      },
+      {
+        "title": "Checks needing assessment",
+        "sql": "select rule,finding from compliance_findings where process_id=$1"
+      },
+      {
+        "title": "Review history",
+        "sql": "select actor,note,evidence_ref,next_review,created_at from reviews where process_id=$1 order by created_at desc"
+      }
+    ]
+  },
+  {
+    "name": "change-record",
+    "title": "Procedure change record",
+    "for_each": "select id,reference as name from processes",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Revision history",
+        "sql": "select version,objective,change_reason,author,status,approver,approved_at,evidence_ref,safety_review_ref from revisions where process_id=$1 order by version"
+      },
+      {
+        "title": "Activity",
+        "sql": "select actor,action,detail,created_at from activity where process_id=$1 order by created_at"
+      }
     ]
   }
 ]

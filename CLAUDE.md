@@ -1,43 +1,50 @@
-# Process Governance for Claude Code: operating instructions
+# Process Governance for Claude Code
 
-This file is the brain. Claude Code reads it at the start of every session. It says who this is for, how work gets done, and the one right way to do each recurring job.
+For the process owner and operations lead maintaining procedures, review dates and improvement actions. Set your business name and colours in brand.json. The demo records are fictional.
 
-## Who this is for
+## House rules
 
-- **Business:** [YOUR BUSINESS]
-- **Operator:** [YOUR NAME], [your role]
-- **What matters most:** [the one or two outcomes you care about]
+Read records before answering. Keep approved revisions intact and propose changes as a new revision. All writes need a named actor and explicit operator intent. Never infer an approval, read receipt or safety assessment from an imported status. Never send, sign, delete or publish. Draft internal briefs to drafts/. Evidence references are operator supplied and are not verified documents. An ambiguous name means list candidates and ask. Use npm run processes -- help for accepted flags. Unknown options fail.
 
-Fill this in once. A worker with context knows. A worker without it guesses.
+DATABASE_URL selects shared Postgres; otherwise use local PGlite. This is a trusted-operator CLI, not an authenticated multi-user service. Use restricted database credentials and your own backup/access controls for shared operation. No direct anonymous database access.
 
-## How to work
+## Routing
 
-1. **Take a brief, not a script.** The operator describes the outcome. You run the right command and present the answer.
-2. **Read before you write.** Before drafting anything about a record, read its full history first.
-3. **Plain language.** Short sentences. No filler. Numbers in tables.
-4. **Silent success, loud problems.** No play-by-play. Say what broke and what you did about it.
-5. **Stop at the line.** Anything that sends, deletes, or faces a customer waits for a yes in this session.
-
-## Routing table: one right way for each recurring job
-
-| When the operator asks for... | Use this |
+| Request | Command |
 |---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+| Show command names and accepted options | /help |
+| Read the process register | /processes |
+| Read one process and its revisions, reviews and improvements | /process |
+| Find owner reviews due within thirty days | /reviews-due |
+| Read proposed revisions awaiting approval | /approval-queue |
+| Review open improvement actions in due-date order | /improvements-due |
+| Find assigned readers missing the current approved version | /acknowledgement-gaps |
+| Compare owners, review dates and overdue improvement counts | /owner-workload |
+| Compare recorded active and waiting minutes with high-priority actions | /bottlenecks |
+| Find overdue, unowned, quiet or changing processes | /attention |
+| Check record exceptions against cited rules and local policies | /compliance |
+| Read the activity history | /history |
+| Build the Monday review from review dates, improvements and acknowledgements | /weekly-review |
+| Register a process as a draft | /add |
+| Update ownership, scope or retention metadata with a reason | /set-metadata |
+| Propose the next procedure version | /revise |
+| Correct proposed content before approval | /edit-draft |
+| Record independent approval with evidence and a future review date | /approve |
+| Record an owner review of the approved version | /review |
+| Assign an improvement with an owner and due date | /log-improvement |
+| Record a resolution and its evidence | /close-improvement |
+| Add someone who must acknowledge a procedure | /assign-reader |
+| Record evidence that an assigned reader acknowledged the current version | /acknowledge |
+| Record a process note | /log |
+| Retire a process after holds, open improvements and drafts are resolved | /archive |
+| Bring across a Nintex Process List CSV as draft register records | /import |
+| Export all seven record sets to a new JSON file | /export |
+| Write an internal weekly brief to drafts without sending | /draft-review |
+| Change a field or rule | /customise |
+| Add a read-only report | /new-view |
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+## Verification
 
-## Hard rules
+Run npm test before committing changes. TEST_DATABASE_URL may only identify an empty disposable database. Never put a live connection in it. The same suite runs on Windows and Linux in .github/workflows/test.yml, plus PostgreSQL 16. npm run demo seeds fictional records, so use it only on a demo database. Read docs/compliance.md before discussing a finding.
 
-- Never send email or messages from here. Draft to `drafts/`, a person sends.
-- Never delete records without an explicit yes in this session. Prefer marking closed or archived.
-- Never invent a record. If a name is ambiguous, list the candidates and ask.
-- The database is the source of truth. If the answer is not in it, say so.
-
-## Where things live
-
-- `scripts/` the CLI. `scripts/lib/db.mjs` picks `DATABASE_URL` (Postgres, Supabase) or the embedded database in `.data/`.
-- `supabase/migrations/` the schema, plain SQL. `npm run migrate` applies it.
-- `.claude/commands/` the slash commands. Add one every time the same ask comes twice.
-- `docs/` the thesis and the guide for moving off Nintex Process Manager.
-
-Built by Enterprise DNA. Installed and run for you as part of Omni: https://enterprisedna.co/omni/instead-of/nintex-process-manager
+Built and run for businesses through Omni by Enterprise DNA.
